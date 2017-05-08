@@ -6577,7 +6577,8 @@ function TSuperRttiContext.FromJson(TypeInfo: PTypeInfo; const obj: ISuperObject
           Result := False;
       end
     else
-       Result := False;
+      TValueData(Value).FAsCurr := 0;
+      Result := True;
     end;
   end;
 
