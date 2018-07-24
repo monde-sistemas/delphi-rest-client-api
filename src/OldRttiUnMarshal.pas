@@ -225,7 +225,9 @@ var
   vUnMarshal: TOldRttiUnMarshal;
   vJsonObject: ISuperObject;
 begin
+  {$IF CompilerVersion < 32.0}
   Result := nil;
+  {$IFEND}
 
   vUnMarshal := TOldRttiUnMarshal.Create;
   try
@@ -245,7 +247,9 @@ var
   vUnMarshal: TOldRttiUnMarshal;
   vJsonObject: ISuperObject;
 begin
+  {$IF CompilerVersion < 32.0}
   Result := nil;
+  {$IFEND}
 
   vUnMarshal := TOldRttiUnMarshal.Create;
   try

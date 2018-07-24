@@ -319,7 +319,9 @@ var
   vJsonValue: TJSONValue;
   vUnmarshal: TDBXJsonUnmarshal;
 begin
+  {$IF CompilerVersion < 32.0}
   Result := nil;
+  {$IFEND}
   vJsonValue := TJSONObject.ParseJSONValue(AJSON);
   try
     if vJsonValue = nil then
