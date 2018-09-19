@@ -212,8 +212,10 @@ type
     function Patch(Content: TStream; ResultClass: TClass): TObject;overload;
     function Patch(Entity: TObject; ResultClass: TClass): TObject;overload;
 
-    procedure Delete();overload;
-    procedure Delete(Entity: TObject);overload;
+    procedure Delete(); overload;
+    procedure Delete(Entity: TObject); overload;
+    function Delete(Content: string): string; overload;
+    function Delete(Content: TStream): string; overload;
 
     {$IFDEF SUPPORTS_ANONYMOUS_METHODS}
     procedure Get(AHandler: TRestResponseHandlerFunc);overload;
@@ -742,6 +744,23 @@ begin
   SetContent(Entity);
 
   FRestClient.DoRequest(METHOD_DELETE, Self);
+end;
+
+function TResource.Delete(Content: string): string;
+var
+  Stream: TStringStream;
+begin
+  Stream := TStringStream.Create(Content);
+  try
+    Result := Delete(Stream);
+  finally
+    Stream.Free;
+  end;
+end;
+
+function TResource.Delete(Content: TStream): string;
+begin
+  Result := ContentRequest(Content, METHOD_DELETE);
 end;
 
 destructor TResource.Destroy;
