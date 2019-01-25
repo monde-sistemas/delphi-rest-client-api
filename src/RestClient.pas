@@ -163,6 +163,9 @@ type
     function EntityRequest(Entity: TObject; ResultClass: TClass; Method: TRequestMethod; AHandler: TRestResponseHandler = nil): TObject;
     function ContentRequest(Content: TStream; Method: TRequestMethod; AHandler: TRestResponseHandler = nil): string; overload;
     function ContentRequest(Content: TStream; ResultClass: TClass; Method: TRequestMethod; AHandler: TRestResponseHandler  = nil): TObject; overload;
+    {$IFDEF SUPPORTS_GENERICS}
+    function ParseGenericResponse<T>(Response: string): T;
+    {$ENDIF}
   public
     destructor Destroy; override;
 
@@ -230,7 +233,9 @@ type
     function Post<T>(Entity: TObject): T;overload;
     function Post<T>(Content: string): T;overload;
     function Put<T>(Entity: TObject): T;overload;
+    function Put<T>(Content: string): T;overload;
     function Patch<T>(Entity: TObject): T;overload;
+    function Patch<T>(Content: string): T;overload;
     {$ELSE}
     function Get(AListClass, AItemClass: TClass): TObject;overload;
     function Post(Adapter: IJsonListAdapter): TObject;overload;
@@ -833,71 +838,53 @@ begin
 end;
 
 {$IFDEF SUPPORTS_GENERICS}
-function TResource.Get<T>(): T;
-var
-  vResponse: string;
+function TResource.ParseGenericResponse<T>(Response: string): T;
 begin
-  vResponse := Self.Get;
-  if trim(vResponse) <> '' then
-    Result := TJsonUtil.UnMarshal<T>(vResponse)
-  else
-    result := Default(T);
+  if Trim(Response).IsEmpty then
+    Exit(Default(T));
+
+  Result := TJsonUtil.UnMarshal<T>(Response);
+end;
+
+function TResource.Get<T>(): T;
+begin
+  Result := ParseGenericResponse<T>(Self.Get);
 end;
 
 function TResource.Post<T>(Entity: TObject): T;
-var
-  vResponse: string;
 begin
   SetContent(Entity);
-
-  vResponse := FRestClient.DoRequest(METHOD_POST, Self);
-
-  if trim(vResponse) <> '' then
-    Result := TJsonUtil.UnMarshal<T>(vResponse)
-  else
-    Result := Default(T);
+  Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_POST, Self));
 end;
 
 function TResource.Post<T>(Content: string): T;
-var
-  vResponse: string;
 begin
-  vResponse := Post(Content);
-
-  if Trim(vResponse) <> '' then
-    Result := TJsonUtil.UnMarshal<T>(vResponse)
-  else
-    Result := Default(T);
+  Result := ParseGenericResponse<T>(Post(Content));
 end;
 
 function TResource.Put<T>(Entity: TObject): T;
-var
-  vResponse: string;
 begin
   SetContent(Entity);
+  Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_PUT, Self));
+end;
 
-  vResponse := FRestClient.DoRequest(METHOD_PUT, Self);
-
-  if trim(vResponse) <> '' then
-    Result := TJsonUtil.UnMarshal<T>(vResponse)
-  else
-    Result := Default(T);
+function TResource.Put<T>(Content: string): T;
+begin
+  Result := ParseGenericResponse<T>(Content);
 end;
 
 function TResource.Patch<T>(Entity: TObject): T;
-var
-  vResponse: string;
 begin
   SetContent(Entity);
+  Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_PATCH, Self));
+end;
 
-  vResponse := FRestClient.DoRequest(METHOD_PATCH, Self);
-
-  if trim(vResponse) <> '' then
-    Result := TJsonUtil.UnMarshal<T>(vResponse)
-  else
-    Result := Default(T);
+function TResource.Patch<T>(Content: string): T;
+begin
+  Result := ParseGenericResponse<T>(Patch(Content));
 end;
 {$ELSE}
+
 function TResource.Get(AListClass, AItemClass: TClass): TObject;
 var
   vResponse: string;
