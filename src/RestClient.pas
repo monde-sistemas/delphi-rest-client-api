@@ -230,12 +230,14 @@ type
 
     {$IFDEF SUPPORTS_GENERICS}
     function Get<T>(): T;overload;
-    function Post<T>(Entity: TObject): T;overload;
-    function Post<T>(Content: string): T;overload;
-    function Put<T>(Entity: TObject): T;overload;
-    function Put<T>(Content: string): T;overload;
-    function Patch<T>(Entity: TObject): T;overload;
-    function Patch<T>(Content: string): T;overload;
+    function Post<T>(Content: TObject): T; overload;
+    function Post<T>(Content: string): T; overload;
+    function Put<T>(Content: TObject): T; overload;
+    function Put<T>(Content: string): T; overload;
+    function Patch<T>(Content: TObject): T; overload;
+    function Patch<T>(Content: string): T; overload;
+    function Delete<T>(Content: TObject): T; overload;
+    function Delete<T>(Content: string): T; overload;
     {$ELSE}
     function Get(AListClass, AItemClass: TClass): TObject;overload;
     function Post(Adapter: IJsonListAdapter): TObject;overload;
@@ -851,9 +853,9 @@ begin
   Result := ParseGenericResponse<T>(Self.Get);
 end;
 
-function TResource.Post<T>(Entity: TObject): T;
+function TResource.Post<T>(Content: TObject): T;
 begin
-  SetContent(Entity);
+  SetContent(Content);
   Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_POST, Self));
 end;
 
@@ -862,26 +864,37 @@ begin
   Result := ParseGenericResponse<T>(Post(Content));
 end;
 
-function TResource.Put<T>(Entity: TObject): T;
+function TResource.Put<T>(Content: TObject): T;
 begin
-  SetContent(Entity);
+  SetContent(Content);
   Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_PUT, Self));
 end;
 
 function TResource.Put<T>(Content: string): T;
 begin
-  Result := ParseGenericResponse<T>(Content);
+  Result := ParseGenericResponse<T>(Put(Content));
 end;
 
-function TResource.Patch<T>(Entity: TObject): T;
+function TResource.Patch<T>(Content: TObject): T;
 begin
-  SetContent(Entity);
+  SetContent(Content);
   Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_PATCH, Self));
 end;
 
 function TResource.Patch<T>(Content: string): T;
 begin
   Result := ParseGenericResponse<T>(Patch(Content));
+end;
+
+function TResource.Delete<T>(Content: TObject): T;
+begin
+  SetContent(Content);
+  Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_DELETE, Self));
+end;
+
+function TResource.Delete<T>(Content: string): T;
+begin
+  Result := ParseGenericResponse<T>(Delete(Content));
 end;
 {$ELSE}
 
