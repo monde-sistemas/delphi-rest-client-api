@@ -119,6 +119,11 @@
   {$DEFINE DELPHI_10TOKYO_UP}
 {$ENDIF}
 
+{$IFDEF VER330}  // RAD Studio 10 Rio
+  {$DEFINE DELPHI_10RIO}
+  {$DEFINE DELPHI_10RIO_UP}
+{$ENDIF}
+
 
 //Provide compatibility for the next version
 {$IF Declared(CompilerVersion) and (CompilerVersion > 30.0)} // Delphi 10 Seattle
@@ -129,6 +134,9 @@
 {------------------------------------------------------------------------------}
 { DELPHI_**_UP VERSIONS                                                          }
 {------------------------------------------------------------------------------}
+{$IFDEF DELPHI_10RIO_UP}
+  {$DEFINE DELPHI_10TOKYO_UP}
+{$ENDIF}
 
 {$IFDEF DELPHI_10TOKYO_UP}
   {$DEFINE DELPHI_10BERLIN_UP}
