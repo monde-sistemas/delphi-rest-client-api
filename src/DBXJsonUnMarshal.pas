@@ -44,7 +44,7 @@ type
 
 implementation
 
-uses SysUtils, StrUtils, RestJsonUtils;
+uses SysUtils, StrUtils, RestJsonUtils, System.Generics.Collections;
 
 { TDBXJsonUnmarshal }
 
