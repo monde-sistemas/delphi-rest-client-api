@@ -708,8 +708,12 @@ end;
 function TResource.ContentRequest(Content: TStream; Method: TRequestMethod;
   AHandler: TRestResponseHandler): string;
 begin
-  Content.Position := 0;
-  FContent.CopyFrom(Content, Content.Size);
+  FContent.Clear;
+  if assigned(Content) then
+  begin
+    Content.Position := 0;
+    FContent.CopyFrom(Content, Content.Size);
+  end;
   Result := FRestClient.DoRequest(Method, Self, AHandler);
 end;
 
@@ -887,6 +891,8 @@ begin
 end;
 
 function TResource.Delete<T>(Content: TObject): T;
+var
+  vResponse: string;
 begin
   SetContent(Content);
   Result := ParseGenericResponse<T>(FRestClient.DoRequest(METHOD_DELETE, Self));
@@ -896,6 +902,7 @@ function TResource.Delete<T>(Content: string): T;
 begin
   Result := ParseGenericResponse<T>(Delete(Content));
 end;
+
 {$ELSE}
 
 function TResource.Get(AListClass, AItemClass: TClass): TObject;
