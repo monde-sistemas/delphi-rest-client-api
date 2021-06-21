@@ -612,7 +612,7 @@ function TResource.Put(Content: string): string;
 var
   vStringStream: TStringStream;
 begin
-  vStringStream := TStringStream.Create(Content);
+  vStringStream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Put(vStringStream);
   finally
@@ -624,7 +624,7 @@ function TResource.Post(Content: string): String;
 var
   vStringStream: TStringStream;
 begin
-  vStringStream := TStringStream.Create(Content);
+  vStringStream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Post(vStringStream);
   finally
@@ -761,7 +761,7 @@ function TResource.Delete(Content: string): string;
 var
   Stream: TStringStream;
 begin
-  Stream := TStringStream.Create(Content);
+  Stream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Delete(Stream);
   finally
@@ -1015,7 +1015,7 @@ begin
   {$ENDIF}
     vRawContent := TJsonUtil.Marshal(Entity);
 
-  vStream := TStringStream.Create(vRawContent);
+  vStream := TStringStream.Create(vRawContent, TEncoding.UTF8);
   try
     vStream.Position := 0;
     FContent.CopyFrom(vStream, vStream.Size);
@@ -1038,7 +1038,7 @@ function TResource.Post(Content: string; ResultClass: TClass): TObject;
 var
   vStringStream: TStringStream;
 begin
-  vStringStream := TStringStream.Create(Content);
+  vStringStream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Post(vStringStream, ResultClass);
   finally
@@ -1065,7 +1065,7 @@ function TResource.Put(Content: string; ResultClass: TClass): TObject;
 var
   vStringStream: TStringStream;
 begin
-  vStringStream := TStringStream.Create(Content);
+  vStringStream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Put(vStringStream, ResultClass);
   finally
@@ -1102,7 +1102,7 @@ function TResource.Patch(Content: string; ResultClass: TClass): TObject;
 var
   vStringStream: TStringStream;
 begin
-  vStringStream := TStringStream.Create(Content);
+  vStringStream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Patch(vStringStream, ResultClass);
   finally
@@ -1124,7 +1124,7 @@ function TResource.Patch(Content: string): string;
 var
   vStringStream: TStringStream;
 begin
-  vStringStream := TStringStream.Create(Content);
+  vStringStream := TStringStream.Create(Content, TEncoding.UTF8);
   try
     Result := Patch(vStringStream);
   finally
