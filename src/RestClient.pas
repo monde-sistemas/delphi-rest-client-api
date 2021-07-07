@@ -91,9 +91,6 @@ type
 
     function DoCustomCreateConnection: IHttpConnection;
 
-    function GetOnConnectionLost: THTTPConnectionLostEvent;
-    procedure SetOnConnectionLost(AConnectionLostEvent: THTTPConnectionLostEvent);
-
     function GetOnError: THTTPErrorEvent;
     procedure SetOnError(AErrorEvent: THTTPErrorEvent);
     function GetResponseHeader(const Header: string): string;
@@ -102,6 +99,8 @@ type
   protected
     procedure Loaded; override;
     function ResponseCodeRaisesError(ResponseCode: Integer): Boolean; virtual;
+    function GetOnConnectionLost: THTTPConnectionLostEvent; virtual;
+    procedure SetOnConnectionLost(AConnectionLostEvent: THTTPConnectionLostEvent); virtual;
   public
     OnBeforeRequest: TRestOnRequestEvent;
     OnAfterRequest: TRestOnRequestEvent;
