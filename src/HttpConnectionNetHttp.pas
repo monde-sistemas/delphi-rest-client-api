@@ -82,6 +82,8 @@ end;
 constructor THttpConnectionNetHttp.Create;
 begin
   FNetHTTPClient := TNetHTTPClient.Create(nil);
+  FNetHTTPClient.HandleRedirects := True;
+
   FNetHTTPRequest := TNetHTTPRequest.Create(FNetHTTPClient);
   FNetHTTPRequest.Client := FNetHTTPClient;
 end;
