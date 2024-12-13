@@ -58,6 +58,10 @@ type
 
 implementation
 
+uses
+  ProxyUtils,
+  System.SysUtils;
+
 procedure THttpConnectionNetHttp.CancelRequest;
 begin
 
@@ -65,7 +69,9 @@ end;
 
 function THttpConnectionNetHttp.ConfigureProxyCredentials(AProxyCredentials: TProxyCredentials): IHttpConnection;
 begin
-//  FNetHTTPClient.ProxySettings := TProxySettings.Create('', 0, AProxyCredentials.UserName, AProxyCredentials.Password);
+  var ProxyIPAddr := GetProxyServerIP;
+  var ProxyPort := GetProxyServerPort;
+  FNetHTTPClient.ProxySettings := TProxySettings.Create(ProxyIPAddr, ProxyPort, AProxyCredentials.UserName, AProxyCredentials.Password);
 
   Result := Self;
 end;
@@ -120,15 +126,15 @@ begin
       else
         Attempts := Attempts - 1;
     except
+      on E: Exception do
       begin
         Attempts := Attempts - 1;
 
         if Attempts = 0 then
-          raise;
+          raise E;
       end;
     end;
   end;
-
 end;
 
 procedure THttpConnectionNetHttp.Get(AUrl: string; AResponse: TStream);
