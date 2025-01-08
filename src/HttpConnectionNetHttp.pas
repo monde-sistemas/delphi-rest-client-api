@@ -121,7 +121,7 @@ begin
         mrDELETE: FResponse := FNetHTTPClient.Delete(AUrl, AResponse);
       end;
 
-      if assigned(FResponse) then
+      if Assigned(FResponse) then
         Attempts := 0
       else
         Attempts := Attempts - 1;

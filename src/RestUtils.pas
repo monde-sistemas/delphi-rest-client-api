@@ -7,6 +7,7 @@ interface
 const
   MediaType_Json = 'application/json';
   MediaType_Xml = 'text/xml';
+  MediaType_Gzip = 'application/gzip';
 
   LOCALE_PORTUGUESE_BRAZILIAN = 'pt-BR';
   LOCALE_US = 'en-US';
