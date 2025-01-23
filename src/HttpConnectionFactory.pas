@@ -24,6 +24,7 @@ uses SysUtils,
     {$IFDEF USE_WIN_INET}
     HttpConnectionWinInet,
     {$ENDIF}
+    HttpConnectionNetHttp,
     Classes, TypInfo;
     
 { THttpConnectionFactory }
@@ -46,6 +47,7 @@ begin
                 {$ELSE}
                 raise Exception.Create('WinInet not supported. If do you run under windows, enable USE_WIN_INET compiler directive.');
                 {$ENDIF}
+    hctNetHttp: Result := THttpConnectionNetHttp.Create;
   else
     raise Exception.CreateFmt('Connection Type "%s" is not supported.', [GetEnumName(TypeInfo(THttpConnectionType), Ord(AType))]);
   end;
