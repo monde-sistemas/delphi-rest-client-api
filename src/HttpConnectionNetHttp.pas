@@ -29,7 +29,7 @@ type
     FOnConnectionLost: THTTPConnectionLostEvent;
     FOnAsyncRequestProcess: TAsyncRequestProcessEvent;
     FProxyCredentials: TProxyCredentials;
-
+    function GetProxySettings: TProxySettings;
     function IsRetryableError(Error: ENetHTTPClientException): Boolean;
     function DoSyncRequest(AHTTPClient: THTTPClient; AMethod: TMethod; const AURL: string; AContent, AResponse: TStream): IHTTPResponse;
     function DoASyncRequest(AHTTPClient: THTTPClient; AMethod: TMethod; const AURL: string; AContent, AResponse: TStream): IHTTPResponse;
@@ -121,13 +121,8 @@ begin
     LHTTPClient.ContentType := FContentTypes;
     LHTTPClient.AcceptLanguage := FAcceptedLanguages;
 
-    if FProxyCredentials.Informed then
-    begin
-      var LProxySettings := TProxySettings.Create(GetProxyServer);
-      LProxySettings.UserName := FProxyCredentials.UserName;
-      LProxySettings.Password := FProxyCredentials.Password;
-      LHTTPClient.ProxySettings := LProxySettings;
-    end;
+    if ProxyActive then
+      LHTTPClient.ProxySettings := GetProxySettings;
 
     try
     if FAsynchronous then
@@ -256,6 +251,21 @@ end;
 function THttpConnectionNetHttp.GetOnConnectionLost: THTTPConnectionLostEvent;
 begin
   Result := FOnConnectionLost;
+end;
+
+function THttpConnectionNetHttp.GetProxySettings: TProxySettings;
+begin
+  var ProxyServer := GetProxyServer;
+  Result := TProxySettings.Create(ProxyServer);
+
+  if FProxyCredentials.Informed and not(ProxyServer.Trim.IsEmpty) then
+  begin
+    if not(ProxyServer.StartsWith('http', true)) then
+      ProxyServer := Format('http://%s', [ProxyServer]);
+
+    Result.UserName := FProxyCredentials.UserName;
+    Result.Password := FProxyCredentials.Password;
+  end;
 end;
 
 function THttpConnectionNetHttp.GetResponseCode: Integer;
