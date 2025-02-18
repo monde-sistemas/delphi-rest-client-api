@@ -256,13 +256,13 @@ end;
 function THttpConnectionNetHttp.GetProxySettings: TProxySettings;
 begin
   var ProxyServer := GetProxyServer;
-  Result := TProxySettings.Create(ProxyServer);
 
   if FProxyCredentials.Informed and not(ProxyServer.Trim.IsEmpty) then
   begin
-    if not(ProxyServer.StartsWith('http', true)) then
+    if not(ProxyServer.StartsWith('http', True)) then
       ProxyServer := Format('http://%s', [ProxyServer]);
 
+    Result := TProxySettings.Create(ProxyServer);
     Result.UserName := FProxyCredentials.UserName;
     Result.Password := FProxyCredentials.Password;
   end;
