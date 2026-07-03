@@ -81,13 +81,15 @@ uses
   System.Types,
   System.SysUtils,
   System.NetConsts,
+  Winapi.WinSock,
   Winapi.WinHTTP;
 
 const
   RETRYABLE_ERROR_CODES: TArray<Integer> = [
     ERROR_WINHTTP_CANNOT_CONNECT,
     ERROR_WINHTTP_TIMEOUT,
-    ERROR_WINHTTP_NAME_NOT_RESOLVED
+    ERROR_WINHTTP_NAME_NOT_RESOLVED,
+    WSAETIMEDOUT
   ];
 
 { THttpConnectionNetHttp }
